@@ -27,7 +27,9 @@ def client_setup(host,port):
 		while True:
 			message = input('') #recebe menssagem do user
 			cli_sock.send(message.encode()) #envia msg pro server
-			
+			#se a msg do user for close, printa que ele foi desconectado
+			if message == "/clear":
+				os.system('clear')
 			#se a msg do user for close, printa que ele foi desconectado
 			if message == "/quit":
 				print("Voce saiu da sala.")
@@ -48,6 +50,6 @@ def received_messages(cli_sock):
 
 #-------------------------------------------------------
 if __name__ == '__main__':
-	host = 'localhost' 
+	host = '' 
 	port = 13000 
 	client_setup(host,port)

@@ -63,8 +63,8 @@ def client_handler(conn_socket,t_id):
 				
 				#limpar o terminal do usuario
 				#ainda nao ta funcionando, ta limpando o terminal do server ='D
-				elif "/clear" in message: 
-					os.system('clear')
+				#elif "/clear" in message: 
+					#os.system('clear')
 				
 				#lista os comandos disponiveis
 				elif "/help" in message:
