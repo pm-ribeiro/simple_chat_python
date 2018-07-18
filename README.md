@@ -15,4 +15,4 @@ $ python3 client.py
 /all 	exibe todos os usuarios conectados
 /help exibe a lista de comandos disponiveis
 /quit sai do chat
-/clean limpa o terminal do usuario (>>NÃO ESTA FUNCIONANDO<<)
+/clean limpa o terminal do usuario
