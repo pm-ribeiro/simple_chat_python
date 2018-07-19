@@ -45,6 +45,12 @@ def client_handler(conn_socket,t_id):
 			nickname = conn_socket.recv(1024).decode()
 			clients[t_id][1] = nickname # guarda o nick na posição 1 do array de clientes
 			conn_socket.send(nickname.encode()) #devolve o nick para confirmar a conexao
+
+			#informa a todos quando um user for conectado
+			logged_in = ("O Usuario %s entrou na sala" % clients[t_id][1]) 
+			for i in range(0, len(clients)):
+				if clients[i][2]==0 and t_id!=i:
+					clients[i][0].send(logged_in.encode())
 			
 			#recebe as msgs do cliente
 			while True:	
@@ -61,39 +67,36 @@ def client_handler(conn_socket,t_id):
 							send_list = "[Nome: %s | IP: %s] "%(clients[i][1],clients[i][3]) 
 							clients[t_id][0].send(send_list.encode()) #envia para o cliente
 				
-				#limpar o terminal do usuario
-				#ainda nao ta funcionando, ta limpando o terminal do server ='D
-				#elif "/clear" in message: 
-					#os.system('clear')
-				
 				#lista os comandos disponiveis
 				elif "/help" in message:
 					commands = "Lista de comandos << %s" % command_list
 					clients[t_id][0].send(commands.encode()) #envia para o user
 				
-				#envia msg para todos os clientes online
+				#se a msg do cliente /quit encerra a conexao e envia para todos a msg que o user foi desconectado
+				elif "/quit" in message:
+					logged_out = ("Usuario %s saiu da sala" % clients[t_id][1]) 
+					#envia msg para todos os users que o cliente X desconctou
+					for i in range(0, len(clients)):
+						if clients[i][2]==0:
+							clients[i][0].send(logged_out.encode())
+					clients[t_id][2]=-1 #muda o status de conectado para desconectado
+					break
+
+				elif "/clear" in message:
+					clients[t_id][0].send("/clear".encode()) #envia para o user
+				
+				#caso mensagem nao seja nenhum dos comandos disponiveis envia msg para todos os users
 				else:
 					for i in range(0, len(clients)):
 						if clients[i][2]==0:
 							clients[i][0].send(serv_response.encode())
-					
-					#se a msg do cliente for close encerra a conexao e printa que encerrou			
-					if message == "/quit":
-						saiu = ("Usuario %s saiu da sala" % clients[t_id][1]) 
-						#envia msg para todos os users que o cliente X desconctou
-						for i in range(0, len(clients)):
-							if clients[i][2]==0:
-								clients[i][0].send(saiu.encode())
-
-						clients[t_id][2]=-1 #muda o status de conectado para desconectado
-						print ("Usuario %s saiu da sala" % clients[t_id][1]) #printa no server só pra conferir
-						break
+			
 			conn_socket.close() #fecha conexao
 	except:
 		os._exit(0)
 
 if __name__ == '__main__':
-	host = '' 
+	host = '192.168.25.5' 
 	port = 13000 
 	print('-- Starting Server --')
 	server_setup(host,port)

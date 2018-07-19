@@ -5,8 +5,8 @@ import os
 
 #funcao que define o setup inicial do client
 def client_setup(host,port):
-	cli_sock = socket(AF_INET,SOCK_STREAM) 
-	cli_sock.connect((host, port)) 
+	cli_sock = socket(AF_INET,SOCK_STREAM)  #cria socket do client
+	cli_sock.connect((host, port))  #junta endereços
 
 	#primeira msg será o nick do usuario
 	nickname = input('Digite seu apelido: ')
@@ -50,6 +50,6 @@ def received_messages(cli_sock):
 
 #-------------------------------------------------------
 if __name__ == '__main__':
-	host = '' 
+	host = '192.168.25.5' 
 	port = 13000 
 	client_setup(host,port)
