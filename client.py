@@ -3,19 +3,28 @@ from socket import *
 from threading import Thread
 import os
 
+first_msg = '-- Voce entrou no chat --\n-- Escolha um apelido e comece a conversar com seus amigos --'
+name_warning = '**Apelidos nao podem conter espaços, tente novamente =)\n> Digite seu apelido: '
+
 #funcao que define o setup inicial do client
 def client_setup(host,port):
 	cli_sock = socket(AF_INET,SOCK_STREAM)  #cria socket do client
 	cli_sock.connect((host, port))  #junta endereços
 
 	#primeira msg será o nick do usuario
-	nickname = input('Digite seu apelido: ')
+	print (first_msg)
+	nickname = input('> Digite seu apelido: ')
+	
+	#entra no laço se tiverem espaços no apelido
+	while " " in nickname:
+		nickname = input(name_warning)
+	
 	cli_sock.send(nickname.encode()) #envia o nickname pro server	
 	returned_nickname = cli_sock.recv(1024).decode() 
-	#server devolve o nickname apenas conferir que o user foi concetado
+	#server devolve o nickname para confirmar que o user foi concetado
 	
 	#greetings msg
-	greetings = "~~ Bem vindo %s ~~\n< Para ver a lista de comandos digite /help >" % returned_nickname
+	greetings = "-- Bem vindo/a %s --\n> Para ver a lista de comandos digite /help" % returned_nickname
 	print (greetings)
 
 	#chama funcao que lida com as msg recebidas

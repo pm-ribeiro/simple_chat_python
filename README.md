@@ -16,3 +16,4 @@ $ python3 client.py
 /help exibe a lista de comandos disponiveis
 /quit sai do chat
 /clear limpa as mensagens da janela do usuario
+/name apelido_novo para trocar seu apelido

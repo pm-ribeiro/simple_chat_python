@@ -7,7 +7,7 @@ import os
 clients = []
 
 #string contendo lista de comandos disponiveis
-command_list = "\n/all lista todos os usuarios ativos\n/help mostra comandos\n/clear limpa a janela\n/quit sair do chat \n"
+command_list = "\n/all lista todos os usuarios ativos\n/help mostra comandos\n/clear limpa a janela\n/quit sair do chat\n/name Apelido_Novo \n"
 
 #funcao para lidar com o setup inicial do server
 def server_setup(host,port):
@@ -55,13 +55,25 @@ def client_handler(conn_socket,t_id):
 			#recebe as msgs do cliente
 			while True:	
 				message = conn_socket.recv(1024).decode() 
-				serv_response = "%s disse: %s" % (clients[t_id][1],message)
+				default_message = "%s disse: %s" % (clients[t_id][1],message)
 				
 				#printa msg no server apenas para verificar se foram enviandas
 				print ("> %s disse: %s"%(clients[t_id][1],message))
 
+				# Change nickname
+				if "/name" in message:
+					new_name = message.split(' ') #separa no espaço
+					#o apelido ficará na posição 1 do array new_name
+					change_name_msg = "%s alterou o apelido para: %s" % (clients[t_id][1] , new_name[1])
+					clients[t_id][1] = new_name[1] #atualiza o nick do user
+					
+					#exibe para todos que o nick foi trocado
+					for i in range(0, len(clients)):
+						if clients[i][2]==0:
+							clients[i][0].send(change_name_msg.encode())
+
 				#lista todos os clientes conectados
-				if "/all" in message: 
+				elif "/all" in message: 
 					for i in range(0, len(clients)):
 						if clients[i][2]==0:
 							send_list = "[Nome: %s | IP: %s] "%(clients[i][1],clients[i][3]) 
@@ -74,7 +86,7 @@ def client_handler(conn_socket,t_id):
 				
 				#se a msg do cliente /quit encerra a conexao e envia para todos a msg que o user foi desconectado
 				elif "/quit" in message:
-					logged_out = ("Usuario %s saiu da sala" % clients[t_id][1]) 
+					logged_out = ("%s saiu da sala" % clients[t_id][1]) 
 					#envia msg para todos os users que o cliente X desconctou
 					for i in range(0, len(clients)):
 						if clients[i][2]==0:
@@ -89,7 +101,7 @@ def client_handler(conn_socket,t_id):
 				else:
 					for i in range(0, len(clients)):
 						if clients[i][2]==0:
-							clients[i][0].send(serv_response.encode())
+							clients[i][0].send(default_message.encode())
 			
 			conn_socket.close() #fecha conexao
 	except:
@@ -98,5 +110,5 @@ def client_handler(conn_socket,t_id):
 if __name__ == '__main__':
 	host = '192.168.25.5' 
 	port = 13000 
-	print('-- Starting Server --')
+	print('-- Server Online --')
 	server_setup(host,port)
