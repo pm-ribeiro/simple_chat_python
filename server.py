@@ -108,7 +108,7 @@ def client_handler(conn_socket,t_id):
 		os._exit(0)
 
 if __name__ == '__main__':
-	host = '192.168.25.5' 
+	host = '' 
 	port = 13000 
 	print('-- Server Online --')
 	server_setup(host,port)

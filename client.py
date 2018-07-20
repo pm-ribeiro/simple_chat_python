@@ -59,6 +59,6 @@ def received_messages(cli_sock):
 
 #-------------------------------------------------------
 if __name__ == '__main__':
-	host = '192.168.25.5' 
+	host = '' 
 	port = 13000 
 	client_setup(host,port)
