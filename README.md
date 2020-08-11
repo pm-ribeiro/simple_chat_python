@@ -33,7 +33,7 @@ $ python3 client.py
 
 /clear - limpa as mensagens da janela do usuario
 
-/name apelido_novo - para trocar seu apelido
+/name 'apelido_novo' - para trocar seu apelido
 
 ### Créditos
 
